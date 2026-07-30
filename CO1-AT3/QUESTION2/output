@@ -1,1 +1,5 @@
-
+PS C:\Users\chandravardhan reddy\AppData\Local\Programs\Microsoft VS Code> & "C:\Users\chandravardhan reddy\AppData\Local\Python\pythoncore-3.14-64\python.exe" e:/smsfraud.py
+Posterior Probabilities:
+[[0.07787826 0.92212174]]
+Prediction: spam
+PS C:\Users\chandravardhan reddy\AppData\Local\Programs\Microsoft VS Code> 
