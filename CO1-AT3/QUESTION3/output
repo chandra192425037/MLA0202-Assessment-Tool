@@ -1,1 +1,8 @@
+PS C:\Users\chandravardhan reddy\AppData\Local\Programs\Microsoft VS Code> & "C:\Users\chandravardhan reddy\AppData\Local\Python\pythoncore-3.14-64\python.exe" e:/playtennis.py
+Information Gain
+Outlook : 0.3626285821279446
+Temperature : 0.15192946522259376
+Humidity : 0.21123657918595443
+Wind : 0.2742053734635072
 
+Highest Information Gain Attribute: Outlook
