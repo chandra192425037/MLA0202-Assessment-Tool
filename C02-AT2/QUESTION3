@@ -1,1 +1,19 @@
-
+from sklearn.naive_bayes import BernoulliNB
+X = [
+    [1, 1, 1],
+    [1, 1, 0],
+    [0, 1, 0],
+    [0, 0, 0],
+    [1, 0, 1]
+]
+y = [1, 1, 0, 0, 1]
+model = BernoulliNB()
+model.fit(X, y)
+fever = int(input("Fever (1=Yes, 0=No): "))
+cough = int(input("Cough (1=Yes, 0=No): "))
+headache = int(input("Headache (1=Yes, 0=No): "))
+result = model.predict([[fever, cough, headache]])
+if result[0] == 1:
+    print("Patient has Flu")
+else:
+    print("Patient does not have Flu")
