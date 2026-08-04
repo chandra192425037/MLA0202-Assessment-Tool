@@ -1,19 +1,17 @@
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
-X = [
-    [5, 3, 2],
-    [1, 0, 0],
-    [4, 2, 3],
-    [0, 1, 0],
-    [6, 4, 2]
+emails = [
+    "Win money now",
+    "Claim your free prize",
+    "Meeting at 10 AM",
+    "Project submission tomorrow",
+    "Congratulations you won cash"
 ]
-y = [1, 0, 1, 0, 1]
+labels = ["Spam", "Spam", "Not Spam", "Not Spam", "Spam"]
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(emails)
 model = LogisticRegression()
-model.fit(X, y)
-free = int(input("Enter 'free' word count: "))
-offer = int(input("Enter 'offer' word count: "))
-win = int(input("Enter 'win' word count: "))
-result = model.predict([[free, offer, win]])
-if result[0] == 1:
-    print("Spam Email")
-else:
-    print("Not Spam Email")
+model.fit(X, labels)
+test_email = ["Free cash prize"]
+prediction = model.predict(vectorizer.transform(test_email))
+print("Prediction:", prediction[0])
