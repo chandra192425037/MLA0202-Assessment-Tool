@@ -1,1 +1,16 @@
-
+from sklearn.linear_model import LinearRegression
+X = [
+    [500, 1, 1],
+    [700, 2, 2],
+    [900, 2, 2],
+    [1100, 3, 3],
+    [1300, 4, 3]
+]
+y = [10000, 15000, 18000, 25000, 32000]
+model = LinearRegression()
+model.fit(X, y)
+area = int(input("Enter floor area: "))
+rooms = int(input("Enter number of rooms: "))
+location = int(input("Enter location (1=Suburb, 2=City, 3=Prime): "))
+rent = model.predict([[area, rooms, location]])
+print("Predicted Rent =", rent[0])
