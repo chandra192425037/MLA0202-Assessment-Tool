@@ -1,1 +1,27 @@
+import pandas as pd
+data = pd.read_csv("E:/datasets/naive_bayes_email_dataset.csv")
+total_spam = data["spam_count"].sum()
+total_ham = data["ham_count"].sum()
+data["spam_probability"] = data["spam_count"] / total_spam
+data["ham_probability"] = data["ham_count"] / total_ham
+print("WITHOUT LAPLACE SMOOTHING")
+print(data)
+alpha = 1
+vocabulary = len(data)
+data["spam_smooth"] = (
+    (data["spam_count"] + alpha) /
+    (total_spam + alpha * vocabulary)
+)
+data["ham_smooth"] = (
+    (data["ham_count"] + alpha) /
+    (total_ham + alpha * vocabulary)
+)
+print("\nWITH LAPLACE SMOOTHING")
+print(data[["word", "spam_smooth", "ham_smooth"]])
+print("\nZero probabilities before smoothing:")
+print((data["spam_probability"] == 0).sum())
+print((data["ham_probability"] == 0).sum())
+print("\nZero probabilities after smoothing:")
+print((data["spam_smooth"] == 0).sum())
+print((data["ham_smooth"] == 0).sum())
 
