@@ -1,1 +1,31 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report
+data = pd.read_csv("E:/datasets/email_spam_classification_dataset.csv")
+X = data["email"]
+y = data["label"].map({"not_spam": 0, "spam": 1})
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+X_train = vectorizer.fit_transform(X_train)
+X_test = vectorizer.transform(X_test)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+probability = model.predict_proba(X_test)[:, 1]
+print("BEFORE OPTIMIZATION")
+prediction = (probability >= 0.5).astype(int)
+print(confusion_matrix(y_test, prediction))
+print(classification_report(y_test, prediction))
+model2 = LogisticRegression(class_weight="balanced")
+model2.fit(X_train, y_train)
+probability2 = model2.predict_proba(X_test)[:, 1]
+threshold = 0.55
+prediction2 = (probability2 >= threshold).astype(int)
+print("\nAFTER OPTIMIZATION")
+print("Threshold:", threshold)
+print(confusion_matrix(y_test, prediction2))
+print(classification_report(y_test, prediction2))
 
