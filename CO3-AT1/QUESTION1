@@ -1,1 +1,27 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score
+data = pd.read_csv("E:\datasets\question1_customer_segmentation.csv")
+print(data.head())
+X = data[["Age", "Annual Income (k$)", "Spending Score (1-100)"]]
+X = StandardScaler().fit_transform(X)
+for k in range(2, 8):
+    model = KMeans(n_clusters=k, random_state=42, n_init=10)
+    model.fit(X)
+    print("K =", k, "Inertia =", model.inertia_)
+model = KMeans(n_clusters=3, random_state=42, n_init=10)
+clusters = model.fit_predict(X)
+print("Clusters:", clusters)
+print("Silhouette Score:",
+      silhouette_score(X, clusters))
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters)
+plt.xlabel("PCA 1")
+plt.ylabel("PCA 2")
+plt.title("Customer Segmentation using K-Means")
+plt.show()
 
