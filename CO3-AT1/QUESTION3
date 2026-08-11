@@ -1,1 +1,46 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.decomposition import FactorAnalysis
+from sklearn.decomposition import FastICA
+data = pd.read_csv("E:\datasets\question3_wine_dimensionality.csv")
+print(data.head())
+X = data.drop("WineID", axis=1)
+X = StandardScaler().fit_transform(X)
+pca = PCA(n_components=2)
+pca_data = pca.fit_transform(X)
+print("PCA Variance:",
+      pca.explained_variance_ratio_)
+fa = FactorAnalysis(n_components=2)
+fa_data = fa.fit_transform(X)
+ica = FastICA(
+    n_components=2,
+    random_state=42
+)
+ica_data = ica.fit_transform(X)
+plt.scatter(
+    pca_data[:, 0],
+    pca_data[:, 1]
+)
+plt.xlabel("PCA 1")
+plt.ylabel("PCA 2")
+plt.title("PCA")
+plt.show()
+plt.scatter(
+    fa_data[:, 0],
+    fa_data[:, 1]
+)
+plt.xlabel("Factor 1")
+plt.ylabel("Factor 2")
+plt.title("Factor Analysis")
+plt.show()
+plt.scatter(
+    ica_data[:, 0],
+    ica_data[:, 1]
+)
+plt.xlabel("ICA 1")
+plt.ylabel("ICA 2")
+plt.title("Independent Component Analysis")
+plt.show()
 
