@@ -1,1 +1,72 @@
+import sklearn_crfsuite
+def features(sentence, i):
+    word = sentence[i]
+    f = {
+        'word': word,
+        'lower': word.lower(),
+        'first_letter': word[0],
+        'last_letter': word[-1],
+        'length': len(word),
+        'isdigit': word.isdigit(),
+        'istitle': word.istitle()
+    }
+    if i > 0:
+        f['prev_word'] = sentence[i - 1].lower()
+    else:
+        f['BOS'] = True
+
+    if i < len(sentence) - 1:
+        f['next_word'] = sentence[i + 1].lower()
+    else:
+        f['EOS'] = True
+    return f
+train_x = [
+    ["John", "ordered", "a", "laptop"],
+    ["Mary", "bought", "a", "phone"],
+    ["David", "ordered", "headphones", "ORD101"],
+    ["Alice", "received", "order", "ORD202"],
+    ["Robert", "bought", "a", "tablet"],
+    ["Sarah", "ordered", "a", "laptop", "ORD303"],
+    ["James", "wants", "a", "phone"],
+    ["Priya", "received", "headphones", "ORD404"]
+]
+train_y = [
+    ["NAME", "O", "O", "PRODUCT"],
+    ["NAME", "O", "O", "PRODUCT"],
+    ["NAME", "O", "PRODUCT", "ORDER_ID"],
+    ["NAME", "O", "O", "ORDER_ID"],
+    ["NAME", "O", "O", "PRODUCT"],
+    ["NAME", "O", "O", "PRODUCT", "ORDER_ID"],
+    ["NAME", "O", "O", "PRODUCT"],
+    ["NAME", "O", "PRODUCT", "ORDER_ID"]
+]
+X = []
+for sentence in train_x:
+    temp = []
+    for i in range(len(sentence)):
+        temp.append(features(sentence, i))
+    X.append(temp)
+crf = sklearn_crfsuite.CRF(
+    algorithm="lbfgs",
+    max_iterations=100,
+    all_possible_transitions=True
+)
+crf.fit(X, train_y)
+test_sentence = [
+    "Ravi",
+    "ordered",
+    "a",
+    "laptop",
+    "ORD505"
+]
+test_x = []
+for i in range(len(test_sentence)):
+    test_x.append(features(test_sentence, i))
+prediction = crf.predict([test_x])[0]
+print("Sentence:")
+print(" ".join(test_sentence))
+print("\nPredicted Labels:")
+for word, label in zip(test_sentence, prediction):
+    print(word, "->", label)
+print("chandra-192425037")
 
