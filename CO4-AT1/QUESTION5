@@ -1,1 +1,52 @@
+import pandas as pd
+data = pd.DataFrame({
+    "Age": ["Young","Young","Young","Middle","Middle","Middle",
+            "Old","Old","Old","Young","Middle","Old"],
+    "Income": ["Low","High","Low","Low","High","Low",
+               "Low","High","Low","Low","High","High"],
+    "Vehicle": ["Bike","Car","Bike","Bike","Car","Bike",
+                "Bike","Car","Bike","Bike","Car","Car"],
+    "Claim": ["Yes","No","Yes","Yes","No","Yes",
+              "Yes","No","Yes","Yes","No","No"]
+})
+print("Historical Data:")
+print(data)
+print("\nLearned Network Structure:")
+print("Age -> Claim")
+print("Income -> Claim")
+print("Vehicle -> Claim")
+def probability(claim, age, income, vehicle):
+    x = data[
+        (data["Age"] == age) &
+        (data["Income"] == income) &
+        (data["Vehicle"] == vehicle)
+    ]
+    if len(x) > 0:
+        return (x["Claim"] == claim).mean()
+    x = data[
+        (data["Age"] == age) &
+        (data["Income"] == income)
+    ]
+    if len(x) > 0:
+        return (x["Claim"] == claim).mean()
+
+    return (data["Claim"] == claim).mean()
+age = "Young"
+income = "Low"
+vehicle = "Bike"
+yes = probability("Yes", age, income, vehicle)
+no = probability("No", age, income, vehicle)
+print("\nNew Customer:")
+print("Age =", age)
+print("Income =", income)
+print("Vehicle =", vehicle)
+print("\nProbability of Claim:")
+print("Yes =", round(yes, 2))
+print("No =", round(no, 2))
+print("\nClaim Probability =", round(yes * 100, 2), "%")
+if yes > no:
+    print("Prediction: Insurance Claim = YES")
+else:
+    print("Prediction: Insurance Claim = NO")
+print("chandra-192425037")
 
