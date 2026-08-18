@@ -1,1 +1,22 @@
+img=[
+[10,20,15],
+[15,200,20],
+[10,25,180]]
+r=len(img)
+c=len(img[0])
+new=[]
+for i in range(r):
+    row=[]
+    for j in range(c):
+        n=[]
+        for x,y in [(i-1,j),(i+1,j),(i,j-1),(i,j+1)]:
+            if 0<=x<r and 0<=y<c:
+                n.append(img[x][y])
+        row.append(round((img[i][j]+sum(n)/len(n))/2,2))
+    new.append(row)
+print("Original:")
+for x in img: print(x)
+print("Updated:")
+for x in new: print(x)
+print("chandra-192425037")
 
