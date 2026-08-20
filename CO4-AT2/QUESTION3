@@ -1,1 +1,65 @@
+import sklearn_crfsuite
+training_data = [
+    [
+        ("John", "CUSTOMER"), ("ordered", "O"), ("iPhone", "PRODUCT"),
+        ("order123", "ORDER_ID"), ("but", "O"), ("screen", "ISSUE"),
+        ("is", "O"), ("broken", "O")
+    ],
+    [
+        ("Alice", "CUSTOMER"), ("bought", "O"), ("Laptop", "PRODUCT"),
+        ("order456", "ORDER_ID"), ("and", "O"), ("battery", "ISSUE"),
+        ("is", "O"), ("dead", "O")
+    ],
+    [
+        ("David", "CUSTOMER"), ("purchased", "O"), ("Phone", "PRODUCT"),
+        ("order789", "ORDER_ID"), ("with", "O"), ("display", "ISSUE"),
+        ("problem", "O")
+    ]
+]
+def get_features(sentence, position):
+    word = sentence[position][0]
+    return {
+        "word": word,
+        "lowercase": word.lower(),
+        "first_letter": word[0],
+        "last_letter": word[-1],
+        "contains_digit": any(char.isdigit() for char in word),
+        "word_length": len(word)
+    }
+training_features = []
+training_labels = []
+for sentence in training_data:
+    training_features.append([
+        get_features(sentence, i)
+        for i in range(len(sentence))
+    ])
+    training_labels.append([
+        sentence[i][1]
+        for i in range(len(sentence))
+    ])
+crf_model = sklearn_crfsuite.CRF(
+    algorithm="lbfgs",
+    max_iterations=100
+)
+crf_model.fit(training_features, training_labels)
+test_sentence = [
+    ("Michael", "O"),
+    ("purchased", "O"),
+    ("Headphones", "O"),
+    ("order321", "O"),
+    ("but", "O"),
+    ("speaker", "O"),
+    ("is", "O"),
+    ("not", "O"),
+    ("working", "O")
+]
+test_features = [
+    get_features(test_sentence, i)
+    for i in range(len(test_sentence))
+]
+predicted_labels = crf_model.predict([test_features])[0]
+print("Predicted Entities:")
+for i in range(len(test_sentence)):
+    print(test_sentence[i][0], "->", predicted_labels[i])
+print("chandra 192425037")
 
