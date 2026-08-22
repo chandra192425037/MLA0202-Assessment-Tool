@@ -1,1 +1,38 @@
+import pandas as pd
+import numpy as np
+data = pd.read_csv(r"E:\datasets\vehicle_activity_data.csv")
+values = {
+    "Driving": 0,
+    "Braking": 1,
+    "Turning": 2,
+    "Stopping": 3
+}
+names = ["Driving", "Braking", "Turning", "Stopping"]
+x = data["Activity"].map(values).dropna().astype(int).values
+startprob = np.array([0.5, 0.2, 0.2, 0.1])
+transmat = np.array([
+    [0.7, 0.1, 0.1, 0.1],
+    [0.2, 0.6, 0.1, 0.1],
+    [0.3, 0.1, 0.5, 0.1],
+    [0.1, 0.2, 0.1, 0.6]
+])
+emissionprob = np.eye(4)
+observations = x[:20]
+states = []
+previous_state = np.argmax(startprob)
+for obs in observations:
+    probabilities = transmat[previous_state].copy()
+    probabilities = probabilities * emissionprob[:, obs]
+    if probabilities.sum() == 0:
+        current_state = previous_state
+    else:
+        current_state = np.argmax(probabilities)
+
+    states.append(current_state)
+    previous_state = current_state
+print("Predicted Activities:")
+print("----------------------")
+for i, state in enumerate(states, start=1):
+    print(f"{i}. {names[state]}")
+print("\nchandra 192425037")
 
