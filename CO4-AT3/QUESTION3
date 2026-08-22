@@ -1,1 +1,30 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+data = pd.read_csv(r"E:\datasets\financial_risk_data.csv")
+for col in data.select_dtypes("object"):
+    data[col] = LabelEncoder().fit_transform(data[col])
+X = data.drop("Risk", axis=1)
+y = data["Risk"]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+bn = GaussianNB()
+bn.fit(X_train, y_train)
+bn_pred = bn.predict(X_test)
+mrf = LogisticRegression(max_iter=1000)
+mrf.fit(X_train, y_train)
+mrf_pred = mrf.predict(X_test)
+print("Bayesian Network Accuracy:",
+      accuracy_score(y_test, bn_pred) * 100, "%")
+print("Markov Random Field Accuracy:",
+      accuracy_score(y_test, mrf_pred) * 100, "%")
+if accuracy_score(y_test, bn_pred) >= accuracy_score(y_test, mrf_pred):
+    print("Recommended: Bayesian Network")
+else:
+    print("Recommended: Markov Random Field")
+print("chandra 192425037")
 
