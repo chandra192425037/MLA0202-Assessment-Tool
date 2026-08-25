@@ -1,1 +1,17 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+data = pd.read_csv("E:\datasets\patient_data.csv")
+sample, remaining = train_test_split(
+    data,
+    test_size=0.9,
+    stratify=data["Disease"],
+    random_state=42
+)
+print("Original Data:", len(data))
+print("Sample Data:", len(sample))
+print("\nOriginal Distribution:")
+print(data["Disease"].value_counts(normalize=True))
+print("\nSample Distribution:")
+print(sample["Disease"].value_counts(normalize=True))
+print("chandra-192425037")
 
