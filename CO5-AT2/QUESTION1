@@ -1,1 +1,23 @@
+import random
+print("MONTE CARLO SAMPLING")
+print("--------------------")
+N = int(input("Enter number of simulation trials: "))
+scheduled_time = float(input("Enter scheduled delivery time: "))
+on_time_count = 0
+for trial in range(1, N + 1):
+    traffic = random.choice(["Low", "Medium", "High"])
+    if traffic == "Low":
+        delivery_time = random.uniform(20, 40)
+    elif traffic == "Medium":
+        delivery_time = random.uniform(40, 60)
+    else:
+        delivery_time = random.uniform(60, 90)
+
+    if delivery_time <= scheduled_time:
+        on_time_count += 1
+probability = on_time_count / N
+print("\nTotal Trials:", N)
+print("On-Time Deliveries:", on_time_count)
+print("Estimated Probability of On-Time Delivery:",
+      round(probability, 4))
 
