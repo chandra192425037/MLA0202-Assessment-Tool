@@ -1,1 +1,91 @@
+print("VALUE ITERATION FOR ROBOT PATH PLANNING")
+print("---------------------------------------")
+grid = [
+    [0, 0, 0],
+    [0, 1, 0],
+    [0, 0, 2]
+]
+rows = len(grid)
+cols = len(grid[0])
+gamma = 0.9
+theta = 0.01
+actions = {
+    "UP": (-1, 0),
+    "DOWN": (1, 0),
+    "LEFT": (0, -1),
+    "RIGHT": (0, 1)
+}
+V = {}
+for r in range(rows):
+    for c in range(cols):
+        if grid[r][c] == 1:
+            V[(r, c)] = -100
+        elif grid[r][c] == 2:
+            V[(r, c)] = 100
+        else:
+            V[(r, c)] = 0
+while True:
+    delta = 0
+    new_V = V.copy()
+    for state in V:
+        r, c = state
+        if grid[r][c] == 1 or grid[r][c] == 2:
+            continue
+        best_value = -float("inf")
+        for action in actions:
+            dr, dc = actions[action]
+            nr = r + dr
+            nc = c + dc
+            if nr < 0 or nr >= rows or nc < 0 or nc >= cols:
+                next_state = state
+            else:
+                next_state = (nr, nc)
+            reward = -1
+            if grid[next_state[0]][next_state[1]] == 1:
+                reward = -100
+            elif grid[next_state[0]][next_state[1]] == 2:
+                reward = 100
+            value = reward + gamma * V[next_state]
+            if value > best_value:
+                best_value = value
+        new_V[state] = best_value
+        delta = max(delta, abs(V[state] - new_V[state]))
+    V = new_V
+    if delta < theta:
+        break
+policy = {}
+for state in V:
+    r, c = state
+    if grid[r][c] == 1:
+        policy[state] = "OBSTACLE"
+        continue
+    if grid[r][c] == 2:
+        policy[state] = "GOAL"
+        continue
+    best_value = -float("inf")
+    best_action = ""
+    for action in actions:
+        dr, dc = actions[action]
+        nr = r + dr
+        nc = c + dc
+        if nr < 0 or nr >= rows or nc < 0 or nc >= cols:
+            next_state = state
+        else:
+            next_state = (nr, nc)
+        reward = -1
+        if grid[next_state[0]][next_state[1]] == 1:
+            reward = -100
+        elif grid[next_state[0]][next_state[1]] == 2:
+            reward = 100
+        value = reward + gamma * V[next_state]
+        if value > best_value:
+            best_value = value
+            best_action = action
+    policy[state] = best_action
+print("\nOptimal Value Function:")
+for state in V:
+    print(state, ":", round(V[state], 2))
+print("\nOptimal Policy:")
+for state in policy:
+    print(state, ":", policy[state])
 
