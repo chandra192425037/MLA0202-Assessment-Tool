@@ -1,1 +1,34 @@
+import random
+print("EPSILON-GREEDY ALGORITHM")
+print("------------------------")
+K = int(input("Enter number of movies: "))
+epsilon = float(input("Enter epsilon value (0 to 1): "))
+N = int(input("Enter number of user interactions: "))
+reward_estimate = [0.0] * K
+reward_count = [0] * K
+for interaction in range(1, N + 1):
+    random_value = random.random()
+    if random_value < epsilon:
+        selected_movie = random.randint(0, K - 1)
+    else:
+        selected_movie = reward_estimate.index(
+            max(reward_estimate)
+        )
+    print("\nInteraction", interaction)
+    print("Selected Movie:", selected_movie + 1)
+    reward = float(input("Enter reward (0 or 1): "))
+    reward_count[selected_movie] += 1
+    reward_estimate[selected_movie] = (
+        reward_estimate[selected_movie]
+        + (reward - reward_estimate[selected_movie])
+        / reward_count[selected_movie]
+    )
+best_movie = reward_estimate.index(max(reward_estimate))
+print("\nReward Estimates:")
+for i in range(K):
+    print("Movie", i + 1, ":", round(reward_estimate[i], 4))
+print("\nMovie with Highest Expected Reward:",
+      best_movie + 1)
+print("Highest Expected Reward:",
+      round(reward_estimate[best_movie], 4))
 
