@@ -1,1 +1,36 @@
+import random
+print("TEMPORAL DIFFERENCE LEARNING")
+print("----------------------------")
+episodes = int(input("Enter number of episodes: "))
+alpha = float(input("Enter learning rate (alpha): "))
+gamma = float(input("Enter discount factor (gamma): "))
+V = {
+    "Start": 0.0,
+    "State1": 0.0,
+    "State2": 0.0,
+    "Goal": 0.0
+}
+for episode in range(1, episodes + 1):
+    state = "Start"
+    while state != "Goal":
+        if state == "Start":
+            next_state = "State1"
+        elif state == "State1":
+            next_state = "State2"
+        else:
+            next_state = "Goal"
+        if next_state == "Goal":
+            reward = 10
+        else:
+            reward = random.choice([0, 1])
+        if next_state == "Goal":
+            target = reward
+        else:
+            target = reward + gamma * V[next_state]
+        td_error = target - V[state]
+        V[state] = V[state] + alpha * td_error
+        state = next_state
+print("\nLearned State Values:")
+for state in V:
+    print(state, ":", round(V[state], 4))
 
