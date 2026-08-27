@@ -1,1 +1,24 @@
-
+BEGIN
+    FOR Movie ← 1 TO K DO
+        RewardEstimate[Movie] ← 0
+        RewardCount[Movie] ← 0
+    END FOR
+    FOR Interaction ← 1 TO N DO
+        RandomValue ← RANDOM(0, 1)
+        IF RandomValue < ε THEN
+            SelectedMovie ← RANDOM_INTEGER(1, K)
+        ELSE
+            SelectedMovie ← ARGMAX(RewardEstimate[1...K])
+        END IF
+        Reward ← GET_USER_REWARD(SelectedMovie)
+        RewardCount[SelectedMovie] ←
+            RewardCount[SelectedMovie] + 1
+        RewardEstimate[SelectedMovie] ←
+            RewardEstimate[SelectedMovie]
+            + (Reward - RewardEstimate[SelectedMovie])
+            / RewardCount[SelectedMovie]
+    END FOR
+    BestMovie ← ARGMAX(RewardEstimate[1...K])
+    DISPLAY BestMovie
+    DISPLAY RewardEstimate[BestMovie]
+END
