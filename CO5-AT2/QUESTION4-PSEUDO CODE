@@ -1,1 +1,21 @@
-
+BEGIN
+    FOR EACH State DO
+        V[State] ← 0
+    END FOR
+    FOR Episode ← 1 TO NumberOfEpisodes D
+        State ← INITIAL_STATE()
+        WHILE State IS NOT TERMINAL DO
+            Action ← SELECT_ACTION(State)
+            Reward, NextState ← TAKE_ACTION(State, Action)
+            IF NextState IS TERMINAL THEN
+                Target ← Reward
+            ELSE
+                Target ← Reward + γ × V[NextState]
+            END IF
+            V[State] ← V[State]
+            + α × (Target - V[State])
+            State ← NextState
+        END WHILE
+    END FOR
+    DISPLAY V
+END
