@@ -1,1 +1,12 @@
-
+BEGIN
+    OnTimeCount ← 0
+    FOR Trial ← 1 TO N DO
+        Condition ← RANDOM_CHOICE(DeliveryConditions)
+        DeliveryTime ← SIMULATE_DELIVERY(Condition)
+        IF DeliveryTime ≤ ScheduledDeliveryTime THEN
+            OnTimeCount ← OnTimeCount + 1
+        END IF
+    END FOR
+    EstimatedProbability ← OnTimeCount / N
+    DISPLAY EstimatedProbability
+END
