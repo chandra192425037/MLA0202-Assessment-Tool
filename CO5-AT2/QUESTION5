@@ -1,1 +1,84 @@
+print("POLICY ITERATION FOR DRONE NAVIGATION")
+print("-------------------------------------")
+states = ["A", "B", "C", "D"]
+actions = ["UP", "DOWN", "LEFT", "RIGHT"]
+gamma = 0.9
+theta = 0.01
+policy = {
+    "A": "RIGHT",
+    "B": "RIGHT",
+    "C": "DOWN",
+    "D": "RIGHT"
+}
+rewards = {
+    ("A", "UP"): -1,
+    ("A", "DOWN"): -1,
+    ("A", "LEFT"): -1,
+    ("A", "RIGHT"): 5,
+    ("B", "UP"): -1,
+    ("B", "DOWN"): -1,
+    ("B", "LEFT"): -1,
+    ("B", "RIGHT"): 10,
+    ("C", "UP"): -1,
+    ("C", "DOWN"): 10,
+    ("C", "LEFT"): -1,
+    ("C", "RIGHT"): -1,
+    ("D", "UP"): -1,
+    ("D", "DOWN"): -1,
+    ("D", "LEFT"): -1,
+    ("D", "RIGHT"): 10
+}
+next_state = {
+    ("A", "UP"): "A",
+    ("A", "DOWN"): "C",
+    ("A", "LEFT"): "A",
+    ("A", "RIGHT"): "B",
+    ("B", "UP"): "B",
+    ("B", "DOWN"): "D",
+    ("B", "LEFT"): "A",
+    ("B", "RIGHT"): "B",
+    ("C", "UP"): "A",
+    ("C", "DOWN"): "C",
+    ("C", "LEFT"): "C",
+    ("C", "RIGHT"): "D",
+    ("D", "UP"): "B",
+    ("D", "DOWN"): "D",
+    ("D", "LEFT"): "C",
+    ("D", "RIGHT"): "D"
+}
+V = {state: 0.0 for state in states}
+policy_stable = False
+while not policy_stable:
+    while True:
+        delta = 0
+        for state in states:
+            old_value = V[state]
+            action = policy[state]
+            next_s = next_state[(state, action)]
+            reward = rewards[(state, action)]
+            V[state] = reward + gamma * V[next_s]
+            delta = max(delta, abs(old_value - V[state]))
+        if delta < theta:
+            break
+    policy_stable = True
+    for state in states:
+        old_action = policy[state]
+        best_action = old_action
+        best_value = -float("inf")
+        for action in actions:
+            next_s = next_state[(state, action)]
+            reward = rewards[(state, action)]
+            action_value = reward + gamma * V[next_s]
+            if action_value > best_value:
+                best_value = action_value
+                best_action = action
+        policy[state] = best_action
+        if old_action != best_action:
+            policy_stable = False
+print("\nOptimal Policy:")
+for state in states:
+    print(state, ":", policy[state])
+print("\nState Values:")
+for state in states:
+    print(state, ":", round(V[state], 4))
 
