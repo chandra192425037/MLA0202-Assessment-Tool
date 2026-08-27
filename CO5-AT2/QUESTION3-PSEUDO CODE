@@ -1,1 +1,56 @@
-
+BEGIN
+    FOR EACH State IN States DO
+        IF State IS OBSTACLE THEN
+            V[State] ← -∞
+        ELSE
+            V[State] ← 0
+        END IF
+    END FOR
+    REPEAT
+        Delta ← 0
+        FOR EACH State IN States DO
+            IF State IS OBSTACLE OR State IS TERMINAL THEN
+                CONTINUE
+            END IF
+            OldValue ← V[State]
+            BestValue ← -∞
+            FOR EACH Action IN Actions DO
+                ActionValue ← 0
+                FOR EACH NextState IN States DO
+                    ActionValue ← ActionValue
+                    + Transition(NextState | State, Action)
+                    × (Reward(State, Action, NextState)
+                    + γ × V[NextState])
+                END FOR
+                IF ActionValue > BestValue THEN
+                    BestValue ← ActionValue
+                END IF
+            END FOR
+            V[State] ← BestValue
+            Delta ← MAX(Delta, ABS(OldValue - V[State]))
+        END FOR
+    UNTIL Delta < θ
+    FOR EACH State IN States DO
+        IF State IS OBSTACLE OR State IS TERMINAL THEN
+            CONTINUE
+        END IF
+        BestValue ← -∞
+        BestAction ← NONE
+        FOR EACH Action IN Actions DO
+            ActionValue ← 0
+            FOR EACH NextState IN States DO
+                ActionValue ← ActionValue
+                + Transition(NextState | State, Action)
+                × (Reward(State, Action, NextState)
+                + γ × V[NextState])
+            END FOR
+            IF ActionValue > BestValue THEN
+                BestValue ← ActionValue
+                BestAction ← Action
+            END IF
+        END FOR
+        Policy[State] ← BestAction
+    END FOR
+    DISPLAY V
+    DISPLAY Policy
+END
