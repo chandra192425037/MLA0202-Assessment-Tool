@@ -1,1 +1,58 @@
-
+BEGIN
+    FOR EACH State IN States DO
+        Policy[State] ← RANDOM_ACTION()
+    END FOR
+    PolicyStable ← FALSE
+    WHILE PolicyStable = FALSE DO
+        FOR EACH State IN States DO
+            V[State] ← 0
+        END FOR
+        REPEAT
+            Delta ← 0
+            FOR EACH State IN States DO
+                IF State IS TERMINAL THEN
+                    CONTINUE
+                END IF
+                OldValue ← V[State]
+                Action ← Policy[State]
+                NewValue ← 0
+                FOR EACH NextState IN States DO
+                    NewValue ← NewValue
+                    + Transition(NextState | State, Action)
+                    × (Reward(State, Action, NextState)
+                    + γ × V[NextState])
+                END FOR
+                V[State] ← NewValue
+                Delta ← MAX(Delta, ABS(OldValue - V[State]))
+            END FOR
+        UNTIL Delta < θ
+        PolicyStable ← TRUE
+        FOR EACH State IN States DO
+            IF State IS TERMINAL THEN
+                CONTINUE
+            END IF
+            OldAction ← Policy[State]
+            BestAction ← OldAction
+            BestValue ← -∞
+            FOR EACH Action IN Actions DO
+                ActionValue ← 0
+                FOR EACH NextState IN States DO
+                    ActionValue ← ActionValue
+                    + Transition(NextState | State, Action)
+                    × (Reward(State, Action, NextState)
+                    + γ × V[NextState])
+                END FOR
+                IF ActionValue > BestValue THEN
+                    BestValue ← ActionValue
+                    BestAction ← Action
+                END IF
+            END FOR
+            Policy[State] ← BestAction
+            IF OldAction ≠ BestAction THEN
+                PolicyStable ← FALSE
+            END IF
+        END FOR
+    END WHILE
+    DISPLAY Policy
+    DISPLAY V
+END
